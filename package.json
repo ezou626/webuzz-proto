@@ -1,0 +1,22 @@
+{
+  "name": "webuzz-proto",
+  "version": "1.0.0",
+  "description": "simple buzzer with express",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/St0nkyCheeseMan/webuzz-proto.git"
+  },
+  "author": "Eric Zou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/St0nkyCheeseMan/webuzz-proto/issues"
+  },
+  "homepage": "https://github.com/St0nkyCheeseMan/webuzz-proto#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
