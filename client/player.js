@@ -26,12 +26,23 @@ function joinGame(){
             document.getElementById("player").innerHTML = "Player " + data.name;
             sessionStorage.setItem("id", data.id);
             sessionStorage.setItem("name", data.name);
-            document.getElementById("setup").innerHTML = "";
+            document.getElementById("setup").hidden = "hidden";
         }
         else{
-            document.getElementById("id").value = ""
-            document.getElementById("name").value = ""
-            document.getElementById("error").innerHTML = data.error
+            document.getElementById("id").value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("error").innerHTML = data.error;
         }
     })
 }
+
+window.onbeforeunload = window.onunload = 
+(fetch("/leavegame", {
+    method: 'POST', mode: 'cors', cache: 'no-cache', credentials: 'same-origin', headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'manual', // manual, *follow, error
+    referrerPolicy: 'no-referrer',
+    body: JSON.stringify({id: sessionStorage.getItem("id"), name: sessionStorage.getItem("name")})
+  }))

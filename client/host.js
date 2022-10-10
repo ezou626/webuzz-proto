@@ -20,7 +20,7 @@ function makeGame(){
         if(data.created){
             document.getElementById("title").innerHTML = "Room " + data.id;
             sessionStorage.setItem("id", data.id);
-            document.getElementById("setup").innerHTML = "";
+            document.getElementById("create").hidden = "hidden";
         }
         else{
             document.getElementById("id").value = "";
