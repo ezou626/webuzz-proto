@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Game Management</title>
+        <meta name="description" content="Management interface">
+        <meta name="keywords" content="trivia Management">
+        <link rel="icon" type="image/x-icon" href="icon.png"></link>
+    </head>
+    <body>
+        <div>
+            <p id="title"></p>
+        </div>
+        <div id="setup">
+            <label for="id">Enter a room name:</label><br>
+            <input type="text" name="id" id="id"></input>
+            <button onclick="makeGame()">Create Room</button><br>
+            <p id="makeError"></p>
+        </div>
+        <script type="text/javascript" src="host.js"></script>
+    </body>
+</html>
