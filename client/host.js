@@ -13,7 +13,7 @@ function makeGame(){
     .then((data) => {
         if(data.created){
             document.getElementById("title").innerHTML = "Room " + data.id;
-            localStorage.setItem("id", data.id)
+            sessionStorage.setItem("id", data.id)
             document.getElementById("setup").innerHTML = "";
         }
         else{
@@ -22,3 +22,14 @@ function makeGame(){
         }
     })
 }
+
+window.onbeforeunload = window.onunload = 
+(fetch("/delgame", {
+    method: 'POST', mode: 'cors', cache: 'no-cache', credentials: 'same-origin', headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'manual', // manual, *follow, error
+    referrerPolicy: 'no-referrer',
+    body: JSON.stringify({id: sessionStorage.getItem("id")})
+  }))

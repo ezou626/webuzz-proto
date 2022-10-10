@@ -40,11 +40,34 @@ app.get("/host.js", (req, res, next) => {
 
 app.post("/makegame", (req, res, next) => {
     if(!(req.body.id in games)){
-        games[req.body.id] = {}
+        games[req.body.id] = new Set()
         res.send({created: true, id: req.body.id})
     }
     else{
         res.send({created: false, id: req.body.id})
+    }
+});
+
+app.post("/delgame", (req, res, next) => {
+    if(req.body.id in games){
+        delete games[req.body.id];
+        res.send({deleted: true, id: req.body.id})
+    }
+    else{
+        res.send({created: false, id: req.body.id})
+    }
+    console.log(games)
+});
+
+app.post("/joingame", (req, res, next) => {
+    if(req.body.id in games){
+        if(!games[req.body.id].has(req.body.name)){
+            games[req.body.id].add()
+            res.send({joined: true, id: req.body.id})
+        }
+    }
+    else{
+        res.send({joined: false, id: req.body.id})
     }
 });
 
