@@ -4,6 +4,7 @@
         <title>Trivia!</title>
         <meta name="description" content="Player interface">
         <meta name="keywords" content="trivia player">
+        <link rel="icon" type="image/x-icon" href="icon.png"></link>
     </head>
     <body>
         <div>
@@ -11,10 +12,10 @@
             <p id="title"></p>
         </div>
         <div id="setup">
-            <label for="id">Enter a room name:</label><br>
-            <input type="text" name="id" id="id"></input>
-            <label for="id">Enter a username:</label><br>
-            <input type="text" name="id" id="id"></input>
+            <label for="id">Enter the room name:</label><br>
+            <input type="text" name="id" id="id"></input><br>
+            <label for="name">Enter your nickname:</label><br>
+            <input type="text" name="name" id="name"></input>
             <button onclick="joinGame()">Join Room</button><br>
             <p id="error"></p>
         </div>

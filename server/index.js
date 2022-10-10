@@ -22,7 +22,7 @@ app.get("/index.js", (req, res, next) => {
     res.sendFile(path.join(__dirname,'../client/index.js'));
 });
 
-app.post("/player", (req, res, next) => {
+app.get("/player", (req, res, next) => {
     res.sendFile(path.join(__dirname,'../client/player.html'));
 });
 

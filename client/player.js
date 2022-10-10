@@ -16,7 +16,7 @@ function joinGame(){
         redirect: 'manual', // manual, *follow, error
         referrerPolicy: 'no-referrer',
         body: JSON.stringify({id: document.getElementById("id").value, 
-        name: document.getElementById("id").value})
+        name: document.getElementById("name").value})
       }).then((results) => {
         return results.json();
     })
@@ -25,6 +25,7 @@ function joinGame(){
             document.getElementById("title").innerHTML = "Room " + data.id;
             document.getElementById("player").innerHTML = "Player " + data.name;
             sessionStorage.setItem("id", data.id);
+            sessionStorage.setItem("name", data.name);
             document.getElementById("setup").innerHTML = "";
         }
         else{
