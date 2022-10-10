@@ -56,18 +56,22 @@ app.post("/delgame", (req, res, next) => {
     else{
         res.send({created: false, id: req.body.id})
     }
-    console.log(games)
 });
 
 app.post("/joingame", (req, res, next) => {
     if(req.body.id in games){
         if(!games[req.body.id].has(req.body.name)){
-            games[req.body.id].add()
-            res.send({joined: true, id: req.body.id})
+            games[req.body.id].add(req.body.name)
+            res.send({joined: true, id: req.body.id, name:req.body.name})
+        }
+        else{
+            res.send({joined: false, id: req.body.id, name:req.body.name, 
+                error: "This name was already taken."})
         }
     }
     else{
-        res.send({joined: false, id: req.body.id})
+        res.send({joined: false, id: req.body.id, name: req.body.name, 
+            error: "Game was not found."})
     }
 });
 

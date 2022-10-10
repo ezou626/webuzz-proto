@@ -1,4 +1,10 @@
 function makeGame(){
+    if(document.getElementById("id").value.includes("<") || 
+    document.getElementById("id").value.includes(">")){
+      document.getElementById("id").value = "";
+      document.getElementById("error").innerHTML = 
+      "Your name must not contain '<' or '>'.";
+    }
     fetch("/makegame", {
         method: 'POST', mode: 'cors', cache: 'no-cache', credentials: 'same-origin', headers: {
           'Content-Type': 'application/json'
@@ -13,12 +19,12 @@ function makeGame(){
     .then((data) => {
         if(data.created){
             document.getElementById("title").innerHTML = "Room " + data.id;
-            sessionStorage.setItem("id", data.id)
+            sessionStorage.setItem("id", data.id);
             document.getElementById("setup").innerHTML = "";
         }
         else{
-            document.getElementById("id").value = ""
-            document.getElementById("makeError").innerHTML = "This name is already taken."
+            document.getElementById("id").value = "";
+            document.getElementById("makeError").innerHTML = "This name is already taken.";
         }
     })
 }

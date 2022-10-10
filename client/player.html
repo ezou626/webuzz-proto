@@ -6,6 +6,18 @@
         <meta name="keywords" content="trivia player">
     </head>
     <body>
-        Content goes here.
+        <div>
+            <p id="player"></p>
+            <p id="title"></p>
+        </div>
+        <div id="setup">
+            <label for="id">Enter a room name:</label><br>
+            <input type="text" name="id" id="id"></input>
+            <label for="id">Enter a username:</label><br>
+            <input type="text" name="id" id="id"></input>
+            <button onclick="joinGame()">Join Room</button><br>
+            <p id="error"></p>
+        </div>
+        <script type="text/javascript" src="player.js"></script>
     </body>
 </html>
