@@ -61,6 +61,7 @@ app.get("/host.js", (req, res, next) => {
 app.post("/makegame", (req, res, next) => {
     if(!(req.body.id in games)){
         games[req.body.id] = {}
+        games[req.body.id].ready = false
         res.send({created: true, id: req.body.id})
     }
     else{
@@ -68,37 +69,54 @@ app.post("/makegame", (req, res, next) => {
     }
 });
 
+//make teams and update variables
 app.post("/setup", (req, res, next) => {
     if((req.body.id in games)){
-        if(req.body.teams > 1){
-            games[req.body.id][teams] = req.body.teams
-            res.send({created: true, teams: req.body.teams, id: req.body.id})
+        teamNum = Object.keys(req.body.teams).length
+        if(teamNum > 1){
+            games[req.body.id][teams] = req.body.teams//object with teams as names
+            var i = 1;
+            for(team in games[req.body.id][teams]){
+                games[req.body.id][teams][team] = {score: 0, id: i};
+                i++;
+            }
+            games[req.body.id].ready = true;
+            games[req.body.id].update = false;
+            res.send({done: true, teams: req.body.teams, id: req.body.id});
         }
     }
     else{
-        res.send({created: false, id: req.body.id})
+        res.send({done: false, id: req.body.id})
     }
 });
 
+//done
 app.post("/delgame", (req, res, next) => {
     if(req.body.id in games){
         delete games[req.body.id];
         res.send({deleted: true, id: req.body.id})
     }
     else{
-        res.send({created: false, id: req.body.id})
+        res.send({deleted: false, id: req.body.id})
     }
 });
 
+//done
 app.post("/joingame", (req, res, next) => {
     if(req.body.id in games){
-        if(!(req.body.name in games[req.body.id])){
-            games[req.body.id][req.body.name] = 0
-            res.send({joined: true, id: req.body.id, name:req.body.name})
+        if(games.id.ready){  
+            if(!(Object.values(games[req.body.id]).includes(req.body.name))){
+                games[req.body.id][req.body.name] = {team: 0, penalty: false}
+                res.send({joined: true, id: req.body.id, name:req.body.name})
+            }
+            else{
+                res.send({joined: false, id: req.body.id, name:req.body.name, 
+                    error: "This name was already taken."})
+            }
         }
         else{
             res.send({joined: false, id: req.body.id, name:req.body.name, 
-                error: "This name was already taken."})
+                error: "Teams have not been created."})
         }
     }
     else{
@@ -107,10 +125,10 @@ app.post("/joingame", (req, res, next) => {
     }
 });
 
+//not done
 app.post("/buzz", (req, res, next) => {
     if(req.body.id in games){
         if(!(req.body.name in games[req.body.id])){
-            games[req.body.id][req.body.name] = 0
             res.send({joined: true, id: req.body.id, name:req.body.name})
         }
         else{
@@ -124,21 +142,29 @@ app.post("/buzz", (req, res, next) => {
     }
 });
 
-app.post("/buzz", (req, res, next) => {
-    if(req.body.id in games){
-        if(!(req.body.name in games[req.body.id])){
-            games[req.body.id][req.body.name] = 0
-            res.send({joined: true, id: req.body.id, name:req.body.name})
+app.get("/getscore", (req, res, next) => {
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+    let sendScore = setInterval(() => {
+        for(id in games){
+            game = games.id
+            if(game.update = true){
+                table = "";
+                for(team in game.teams){
+                    table += `<tr><th>${team.name}</th><th>${team.score}</th></tr>`;
+                }
+                display = "<table>"+table+"</table>";
+                res.write(`data: ${JSON.stringify({sb: display, id: id})}`);
+            }
         }
-        else{
-            res.send({joined: false, id: req.body.id, name:req.body.name, 
-                error: "This name was already taken."})
-        }
-    }
-    else{
-        res.send({joined: false, id: req.body.id, name: req.body.name, 
-            error: "Game was not found. The host may have ended it."})
-    }
+    }, 100);
+    res.on('close', () => {
+        clearInterval(sendScore);
+        res.end();
+    });
 });
 
 app.post("/leavegame", (req, res, next) => {

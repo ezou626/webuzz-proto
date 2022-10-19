@@ -19,8 +19,14 @@
             <button onclick="joinGame()">Join Room</button><br>
             <p id="error"></p>
         </div>
-        <div id="score" hidden></div>
+        <div id="sb" hidden><p id="score"></p></div>
         <div id="buzzer" hidden></div>
         <script type="text/javascript" src="player.js"></script>
+        <script type="text/javascript">
+            var source = new EventSource("/getscore");
+            source.onmessage = function(event) {
+                document.getElementById("score").innerHTML = event.data;
+            };
+        </script>
     </body>
 </html>
