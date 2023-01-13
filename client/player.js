@@ -1,3 +1,4 @@
+var listener = null
 function joinGame(){
     if(document.getElementById("id").value.includes("<") || 
     document.getElementById("id").value.includes(">") || 
@@ -7,8 +8,8 @@ function joinGame(){
         document.getElementById("name").value = "";
         document.getElementById("error").innerHTML = 
         "Your name must not contain '<' or '>'.";
-    }
-    fetch("/joingame", {
+    };
+    results = fetch("/joingame", {
         method: 'POST', mode: 'cors', cache: 'no-cache', credentials: 'same-origin', headers: {
           'Content-Type': 'application/json'
           // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -27,13 +28,22 @@ function joinGame(){
             sessionStorage.setItem("id", data.id);
             sessionStorage.setItem("name", data.name);
             document.getElementById("setup").hidden = "hidden";
+            listener = getListener();
         }
         else{
             document.getElementById("id").value = "";
             document.getElementById("name").value = "";
             document.getElementById("error").innerHTML = data.error;
         }
-    })
+    });
+  }
+
+function getListener(){
+  var source = new EventSource("/getscore");
+  source.onmessage = function(event) {
+    document.getElementById("score").innerHTML = event.data;
+  };
+  return source;
 }
 
 window.onbeforeunload = window.onunload = 

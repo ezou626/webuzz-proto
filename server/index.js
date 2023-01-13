@@ -26,48 +26,18 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-//big mistake in not making separate files for endpoints big rip L bozo
-//will fix in better versions later
 games = {}
 
-app.get("/", (req, res, next) => {
-    res.sendFile(path.join(__dirname,'../client/index.html'));
-});
+var def = require('./routes/default')
+app.use("/", def)
 
-app.get("/icon.png", (req, res, next) => {
-    res.sendFile(path.join(__dirname,'../client/icon.png'));
-});
+var play = require('./routes/player')
+app.use("/player", play)
 
-app.get("/index.js", (req, res, next) => {
-    res.sendFile(path.join(__dirname,'../client/index.js'));
-});
+var host = require('./routes/host')
+app.use("/host", host)
 
-app.get("/player", (req, res, next) => {
-    res.sendFile(path.join(__dirname,'../client/player.html'));
-});
-
-app.get("/player.js", (req, res, next) => {
-    res.sendFile(path.join(__dirname,'../client/player.js'));
-});
-
-app.get("/host", (req, res, next) => {
-    res.sendFile(path.join(__dirname,'../client/host.html'));
-});
-
-app.get("/host.js", (req, res, next) => {
-    res.sendFile(path.join(__dirname,'../client/host.js'));
-});
-
-app.post("/makegame", (req, res, next) => {
-    if(!(req.body.id in games)){
-        games[req.body.id] = {}
-        games[req.body.id].ready = false
-        res.send({created: true, id: req.body.id})
-    }
-    else{
-        res.send({created: false, id: req.body.id})
-    }
-});
+require('./routes/makegame')(app, games)
 
 //make teams and update variables
 app.post("/setup", (req, res, next) => {
@@ -103,8 +73,14 @@ app.post("/delgame", (req, res, next) => {
 
 //done
 app.post("/joingame", (req, res, next) => {
-    if(req.body.id in games){
-        if(games.id.ready){  
+    id = req.body.id;
+    if(id in games){
+        console.log(id)
+        console.log("here");
+        console.log(games[id]);
+        console.log(games)
+        console.log("here");
+        if(games[id].ready){  
             if(!(Object.values(games[req.body.id]).includes(req.body.name))){
                 games[req.body.id][req.body.name] = {team: 0, penalty: false}
                 res.send({joined: true, id: req.body.id, name:req.body.name})
@@ -117,6 +93,7 @@ app.post("/joingame", (req, res, next) => {
         else{
             res.send({joined: false, id: req.body.id, name:req.body.name, 
                 error: "Teams have not been created."})
+            console.log("sent")
         }
     }
     else{
@@ -151,7 +128,7 @@ app.get("/getscore", (req, res, next) => {
     let sendScore = setInterval(() => {
         for(id in games){
             game = games.id
-            if(game.update = true){
+            if(game.update){
                 table = "";
                 for(team in game.teams){
                     table += `<tr><th>${team.name}</th><th>${team.score}</th></tr>`;
