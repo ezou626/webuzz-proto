@@ -39,26 +39,7 @@ app.use("/host", host)
 
 require('./routes/makegame')(app, games)
 
-//make teams and update variables
-app.post("/setup", (req, res, next) => {
-    if((req.body.id in games)){
-        teamNum = Object.keys(req.body.teams).length
-        if(teamNum > 1){
-            games[req.body.id][teams] = req.body.teams//object with teams as names
-            var i = 1;
-            for(team in games[req.body.id][teams]){
-                games[req.body.id][teams][team] = {score: 0, id: i};
-                i++;
-            }
-            games[req.body.id].ready = true;
-            games[req.body.id].update = false;
-            res.send({done: true, teams: req.body.teams, id: req.body.id});
-        }
-    }
-    else{
-        res.send({done: false, id: req.body.id})
-    }
-});
+require('./routes/makegame')(app, games)
 
 //done
 app.post("/delgame", (req, res, next) => {

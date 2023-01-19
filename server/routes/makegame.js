@@ -1,4 +1,3 @@
-const path = require("path")
 module.exports = function(app, games) {
     app.post("/makegame", (req, res, next) => {
         if(!(req.body.id in games)){
