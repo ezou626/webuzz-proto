@@ -17,7 +17,6 @@ function makeGame(){
   })
   .then((data) => {
       if(data.created){
-          document.getElementById("title").innerHTML = "Room " + data.id;
           sessionStorage.setItem("id", data.id);
           document.getElementById("create").hidden = "hidden";
       }
@@ -41,7 +40,8 @@ function setup() {
   })
   .then((data) => {
     if(data.done){
-        
+        document.getElementById("game").removeAttribute("hidden");
+        document.getElementById("room").innerHTML = "Room " + sessionStorage.getItem("id");
     }
     else{
         document.getElementById("id").value = "";

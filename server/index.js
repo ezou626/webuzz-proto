@@ -39,7 +39,7 @@ app.use("/host", host)
 
 require('./routes/makegame')(app, games)
 
-require('./routes/makegame')(app, games)
+require('./routes/setup')(app, games)
 
 //done
 app.post("/delgame", (req, res, next) => {
