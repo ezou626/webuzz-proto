@@ -1,14 +1,24 @@
+//express setup
 const express = require("express")
 const path = require("path")
-const app = express()
 const cors = require('cors')
-const PORT = process.env.PORT || 3000
 
-//Credit to nodyou on StackOverflow
-//This gets a public ip
+//initialize app
+const app = express()
+const PORT = process.env.PORT || 3000
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+//network constants
 const { networkInterfaces } = require('os');
 const nets = networkInterfaces();
 const ips = {};
+
+//create a games object to store all active games
+var games = {}
+
+//Gets a public IP, credit to nodyou on StackOverflow
 for (const name of Object.keys(nets)) {
     for (const net of nets[name]) {
         const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4
@@ -20,28 +30,23 @@ for (const name of Object.keys(nets)) {
         }
     }
 }
-//end credits
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-games = {}
-
+//js file for the home page
 var def = require('./routes/default')
 app.use("/", def)
 
+//creates a router for the player page
 var play = require('./routes/player')
 app.use("/player", play)
 
+//creates a router for the host page
 var host = require('./routes/host')
 app.use("/host", host)
 
+//game creation functionality
 require('./routes/makegame')(app, games)
 
-require('./routes/setup')(app, games)
-
-//done
+//delete game request
 app.post("/delgame", (req, res, next) => {
     if(req.body.id in games){
         delete games[req.body.id];

@@ -1,3 +1,6 @@
+/*
+Serves host client html and js files
+*/
 const path = require("path")
 
 var express = require('express'), 

@@ -1,12 +1,20 @@
+/*
+This function handles game creation, adding a game object with key game_id in the global games object
+*/
 module.exports = function(app, games) {
-    app.post("/makegame", (req, res, next) => {
-        if(!(req.body.id in games)){
-            games[req.body.id] = {}
-            games[req.body.id].ready = false
-            res.send({created: true, id: req.body.id})
+    app.post("/makegame", (request, response, next) => {
+        if(!(request.body.id in games)){
+            games[request.body.id] = {
+                //TODO: Add multi-team functionality
+                team1: {score: 0, players: {}},
+                team2: {score: 0, players: {}},
+                update: false,
+                started: false
+            };
+            response.send({created: true, id: request.body.id});
         }
         else{
-            res.send({created: false, id: req.body.id})
+            response.send({created: false, id: request.body.id});
         }
     });
 }

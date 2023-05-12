@@ -1,3 +1,6 @@
+/*
+Serves client home page files
+*/
 const path = require("path")
 
 var express = require('express'), 
